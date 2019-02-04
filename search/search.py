@@ -22,10 +22,10 @@ class SearchProblem:
   """
   
   def getStartState(self):
-     """
-     Returns the start state for the search problem 
-     """
-     util.raiseNotDefined()
+    """
+    Returns the start state for the search problem 
+    """
+    util.raiseNotDefined()
     
   def isGoalState(self, state):
      """
@@ -55,7 +55,7 @@ class SearchProblem:
      be composed of legal moves
      """
      util.raiseNotDefined()
-           
+          
 
 def tinyMazeSearch(problem):
   """
@@ -82,6 +82,67 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
   "*** YOUR CODE HERE ***"
+
+  
+          
+  print problem
+  print "Start:", problem.getStartState()
+  print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+  print "Start's successors:", problem.getSuccessors(problem.getStartState())
+  print "Start's successors:", problem.getSuccessors(problem.getSuccessors(problem.getStartState())[1][0])
+  from game import Directions
+  from util import Stack
+  
+
+  n=Directions.NORTH
+  s=Directions.SOUTH
+  e=Directions.EAST
+  w=Directions.WEST
+  frontier = Stack()
+  explored = []
+  solution = []
+
+  def recursiveDFS(node):
+    if problem.isGoalState(node):
+      print node , "IS GOAL STATE"
+      print "RETURNING SOLUTION :", solution
+      return solution
+    else:
+      explored.append(node) #We have visited the node
+      successors = problem.getSuccessors(node) #Get the successors
+      for x in successors:#For each successor
+        if x[0] not in explored:#If we havent visited the node
+          frontier.push(x[0])#Add the node to the frontier
+          print node, "-->",x[0]
+          done = recursiveDFS(x[0])#Recurse on the new node, set done equal to the output
+          if done is not None:#If done is not empty, ei: If at the end of the recursion we found a goal state, add the direction to the start of the solution list
+            if x[1] == "North":
+              solution.insert(0,n)
+            elif x[1] == "South":
+              solution.insert(0,s)
+            elif x[1] == "East":
+              solution.insert(0,e)
+            elif x[1] == "West":
+              solution.insert(0,w)
+            return done
+              
+  frontier.push(problem.getStartState())
+            
+
+  currentNode = frontier.pop()
+  explored.append(currentNode)
+  #done = recursiveDFS(currentNode)
+  #print "Length: ", len(done)
+  #print "Done: " , done
+  #return done
+  successors = problem.getSuccessors(currentNode)
+  
+  while successors is not None:
+    for x in successors:
+      if x not in explored:
+        explored.append(x)
+        frontier.push(x)
+
   util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
